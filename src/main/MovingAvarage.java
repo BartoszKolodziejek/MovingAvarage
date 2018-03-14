@@ -11,7 +11,7 @@ import com.forex.jExpertAdvisor.trades.IStrategy;
 import com.forex.jExpertAdvisor.trades.TradeMgr;
 import com.forex.jExpertAdvisor.trades.TradeType;
 
-public class MovingAvarage implements IStrategy {
+public class MovingAvarage extends IStrategy {
 	
 
 	
@@ -28,7 +28,7 @@ public class MovingAvarage implements IStrategy {
 	
 	private BigDecimal getAvg(int duration) {
 		 BigDecimal result = new BigDecimal(0);
-		List<Candle> candles = MarketMgr.getInstance().getHistoricView().subList(MarketMgr.getInstance().getHistoricView().size()-(duration+1), MarketMgr.getInstance().getHistoricView().size()-1);
+		List<Candle> candles = MarketMgr.getInstance(this.getSymbol()).getHistoricView().subList(MarketMgr.getInstance(this.getSymbol()).getHistoricView().size()-(duration+1), MarketMgr.getInstance(this.getSymbol()).getHistoricView().size()-1);
 		for (Candle candle : candles) {
 			result = result.add(candle.getClose());
 		}
@@ -39,7 +39,7 @@ public class MovingAvarage implements IStrategy {
 	public void OnStart() {
 		
 		if(getAvg(5).compareTo(getAvg(20))>0 && ExistingTrades.getInstance().isEmpty()) {
-			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance().getAsk().subtract(new BigDecimal(0.1))), TradeType.BUY);
+			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(0.1))), TradeType.BUY, this.getSymbol());
 		ExistingTrades.getInstance().forEach((k,v) -> {
 			if(v.getType().equals(TradeType.SELL))
 				try {
@@ -55,7 +55,7 @@ public class MovingAvarage implements IStrategy {
 		}
 		
 		if(getAvg(5).compareTo(getAvg(20))<0 && ExistingTrades.getInstance().isEmpty()) {
-			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance().getAsk().subtract(new BigDecimal(-0.1))), TradeType.SELL);
+			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(-0.1))), TradeType.SELL, this.getSymbol());
 			ExistingTrades.getInstance().forEach((k,v) -> {
 				if(v.getType().equals(TradeType.BUY))
 					try {
