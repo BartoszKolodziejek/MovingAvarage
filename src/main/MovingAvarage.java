@@ -41,7 +41,7 @@ public class MovingAvarage extends IStrategy {
 		if(getAvg(5).compareTo(getAvg(20))>0 && ExistingTrades.getInstance().isEmpty()) {
 			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(0.1))), TradeType.BUY, this.getSymbol());
 		ExistingTrades.getInstance().forEach((k,v) -> {
-			if(v.getType().equals(TradeType.SELL))
+			if(v.getType().equals(TradeType.SELL) && v.getStrategy().equals(this))
 				try {
 					TradeMgr.getInstance().close(v);
 				} catch (IOException e) {
@@ -57,7 +57,7 @@ public class MovingAvarage extends IStrategy {
 		if(getAvg(5).compareTo(getAvg(20))<0 && ExistingTrades.getInstance().isEmpty()) {
 			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(-0.1))), TradeType.SELL, this.getSymbol());
 			ExistingTrades.getInstance().forEach((k,v) -> {
-				if(v.getType().equals(TradeType.BUY))
+				if(v.getType().equals(TradeType.BUY) && v.getStrategy().equals(this))
 					try {
 						TradeMgr.getInstance().close(v);
 					} catch (IOException e) {
