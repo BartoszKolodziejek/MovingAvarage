@@ -6,10 +6,7 @@ import java.util.List;
 import com.forex.jExpertAdvisor.candles.Candle;
 import com.forex.jExpertAdvisor.main.MarketMgr;
 import com.forex.jExpertAdvisor.stoplosses.StopLoss;
-import com.forex.jExpertAdvisor.trades.ExistingTrades;
-import com.forex.jExpertAdvisor.trades.IStrategy;
-import com.forex.jExpertAdvisor.trades.TradeMgr;
-import com.forex.jExpertAdvisor.trades.TradeType;
+import com.forex.jExpertAdvisor.trades.*;
 
 public class MovingAvarage extends IStrategy {
 	
@@ -36,9 +33,17 @@ public class MovingAvarage extends IStrategy {
 		
 	}
 
+	public boolean isThisStrategyTradeType(TradeType tradeType){
+		for(Trade trade: ExistingTrades.getInstance().values()){
+			if (trade.getStrategy().equals(this)&&trade.getType().equals(tradeType))
+				return true;
+		}
+		return false;
+	}
+
 	public void OnStart() {
 		
-		if(getAvg(5).compareTo(getAvg(20))>0 && ExistingTrades.getInstance().isEmpty()) {
+		if(getAvg(5).compareTo(getAvg(20))>0 && !isThisStrategyTradeType(TradeType.BUY)) {
 			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(0.1))), TradeType.BUY, this.getSymbol());
 		ExistingTrades.getInstance().forEach((k,v) -> {
 			if(v.getType().equals(TradeType.SELL) && v.getStrategy().equals(this))
@@ -54,7 +59,7 @@ public class MovingAvarage extends IStrategy {
 		});
 		}
 		
-		if(getAvg(5).compareTo(getAvg(20))<0 && ExistingTrades.getInstance().isEmpty()) {
+		if(getAvg(5).compareTo(getAvg(20))<0 && !isThisStrategyTradeType(TradeType.SELL)) {
 			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(-0.1))), TradeType.SELL, this.getSymbol());
 			ExistingTrades.getInstance().forEach((k,v) -> {
 				if(v.getType().equals(TradeType.BUY) && v.getStrategy().equals(this))
