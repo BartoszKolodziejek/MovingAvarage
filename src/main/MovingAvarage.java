@@ -25,7 +25,7 @@ public class MovingAvarage extends IStrategy {
 	
 	private BigDecimal getAvg(int duration) {
 		 BigDecimal result = new BigDecimal(0);
-		List<Candle> candles = MarketMgr.getInstance(this.getSymbol()).getHistoricView().subList(MarketMgr.getInstance(this.getSymbol()).getHistoricView().size()-(duration+1), MarketMgr.getInstance(this.getSymbol()).getHistoricView().size()-1);
+		List<Candle> candles = MarketMgr.getInstance(this.getSymbol()).getHistoricView().subList(MarketMgr.getInstance(this.getSymbol()).getHistoricView().indexOf(MarketMgr.getInstance(this.getSymbol()).getCurrentCandle())-(duration+1),MarketMgr.getInstance(this.getSymbol()).getHistoricView().indexOf(MarketMgr.getInstance(this.getSymbol()).getCurrentCandle())-1 );
 		for (Candle candle : candles) {
 			result = result.add(candle.getClose());
 		}
