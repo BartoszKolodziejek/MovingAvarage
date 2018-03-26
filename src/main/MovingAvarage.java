@@ -44,24 +44,9 @@ public class MovingAvarage extends IStrategy {
 	public void OnStart() {
 		
 		if(getAvg(5).compareTo(getAvg(20))>0 && !isThisStrategyTradeType(TradeType.BUY)) {
-		ExistingTrades.getInstance().forEach((k,v) -> {
-			if(v.getType().equals(TradeType.SELL) && v.getStrategy().equals(this))
-				try {
-					TradeMgr.getInstance().close(v);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		});
-			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(0.1))), TradeType.BUY, this.getSymbol());
-		}
-		
-		if(getAvg(5).compareTo(getAvg(20))<0 && !isThisStrategyTradeType(TradeType.SELL)) {
-			ExistingTrades.getInstance().forEach((k,v) -> {
-				if(v.getType().equals(TradeType.BUY) && v.getStrategy().equals(this))
+			for (long i = ExistingTrades.getInstance().size()-1; i>=0; i--) {
+				Trade v = ExistingTrades.getInstance().get(i);
+				if (v.getType().equals(TradeType.SELL) && v.getStrategy().equals(this))
 					try {
 						TradeMgr.getInstance().close(v);
 					} catch (IOException e) {
@@ -71,7 +56,25 @@ public class MovingAvarage extends IStrategy {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			});
+			}
+			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(0.1))), TradeType.BUY, this.getSymbol());
+		}
+		
+		if(getAvg(5).compareTo(getAvg(20))<0 && !isThisStrategyTradeType(TradeType.SELL)) {
+
+			for (long i = ExistingTrades.getInstance().size()-1; i>=0; i--) {
+                 Trade v = ExistingTrades.getInstance().get(i);
+				if (v.getType().equals(TradeType.BUY) && v.getStrategy().equals(this))
+				try {
+					TradeMgr.getInstance().close(v);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			TradeMgr.getInstance().open(this, new StopLoss(MarketMgr.getInstance(this.getSymbol()).getAsk().subtract(new BigDecimal(-0.1))), TradeType.SELL, this.getSymbol());
 		}
 		
