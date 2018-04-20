@@ -30,7 +30,7 @@
 	<dependency>
 	    <groupId>com.github.BartoszKolodziejek</groupId>
 	    <artifactId>jExepertAdvisor</artifactId>
-	    <version>432490203b</version>
+	    <version>b5a313c3f5</version>
 	</dependency>
 		</dependencies>
 </project>

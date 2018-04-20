@@ -9,7 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.github.BartoszKolodziejek:jExepertAdvisor:432490203b" level="project" />
+    <orderEntry type="library" name="Maven: com.github.BartoszKolodziejek:jExepertAdvisor:b5a313c3f5" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.7" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
